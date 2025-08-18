@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bean's Cozy Hub</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Good morning, Bean 🌞</h1>
+      <div class="love-note" id="loveNote">You're amazing, always 💛</div>
+    </header>
+
+    <main>
+      <!-- 🎵 Music Hub -->
+      <section class="card" id="musicHub">
+        <h2>🎵 Music Hub</h2>
+        <div id="statusMessage" class="status-message"></div>
+        <div id="songOfDay">Click "Connect Spotify" to see your music!</div>
+
+        <!-- Now Playing Card -->
+        <div class="now-playing-card inactive" id="nowPlayingCard">
+          <div class="now-playing-content">
+            <div class="now-playing-art" id="nowPlayingArt">🎵</div>
+            <div class="now-playing-info">
+              <div class="now-playing-track" id="nowPlayingTrack">
+                Ready to Play
+              </div>
+              <div class="now-playing-artist" id="nowPlayingArtist">
+                Select a song from below
+              </div>
+            </div>
+            <div class="global-controls">
+              <button class="control-btn" id="prevBtn" title="Previous">
+                ⮜
+              </button>
+              <button
+                class="control-btn primary"
+                id="globalPlayBtn"
+                title="Play/Pause"
+              >
+                ▶
+              </button>
+              <button class="control-btn" id="nextBtn" title="Next">⮞</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="music-sections">
+          <div class="music-section">
+            <h3>🕒 Your Recent Tracks</h3>
+            <div id="recentSongs"></div>
+          </div>
+
+          <div class="music-section">
+            <h3>💎 Your Top Favorites</h3>
+            <div id="suggestedSongs"></div>
+          </div>
+
+          <div class="music-section">
+            <h3>📋 Your Playlists</h3>
+            <div class="playlist-grid" id="playlistGrid"></div>
+            <div id="playlistSongs"></div>
+          </div>
+
+          <div class="music-section">
+            <h3>🎯 Discover New</h3>
+            <div id="discoveryMessages">
+              Connect Spotify to discover new music based on your taste!
+            </div>
+            <div id="discoverySongs"></div>
+          </div>
+        </div>
+
+        <button id="connectSpotifyBtn">Connect Spotify</button>
+      </section>
+
+      <!-- 📺 Favorite Creators -->
+      <section class="card" id="creatorsHub">
+        <h2>📺 Favorite Creators</h2>
+        <div class="horizontal-scroll" id="creatorCards"></div>
+        <button id="watchLaterBtn">🎲 Surprise Me</button>
+      </section>
+
+      <!-- 🧶 Live Premium Knitting Patterns -->
+      <section class="card" id="knittingHub">
+        <h2>🧶 Live Knitting Patterns</h2>
+        <p
+          style="
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin: 0 0 1rem 0;
+            text-align: center;
+          "
+        >
+          Fresh patterns from Ravelry, Etsy, Brooklyn Tweed, and more!
+          <strong>10 new patterns each refresh</strong> - no duplicates in this
+          session.
+        </p>
+        <div id="trendingPosts">
+          Loading premium patterns from live sources...
+        </div>
+        <button id="randomPatternBtn">🔄 Get 10 New Patterns</button>
+        <div class="horizontal-scroll" id="yarnShopDeals"></div>
+      </section>
+
+      <!-- 🎬 Movies & Shows -->
+      <section class="card" id="moviesHub">
+        <h2>🎬 Movies & Shows</h2>
+        <div class="horizontal-scroll" id="movieCards"></div>
+        <button id="randomPickBtn">Random Pick</button>
+      </section>
+
+      <!-- 🍲 Recipe Section -->
+      <section class="card" id="recipesHub">
+        <h2>🍲 Recipes</h2>
+        <div class="horizontal-scroll" id="recipeCards"></div>
+        <button id="randomRecipeBtn">Random Recipe</button>
+      </section>
+
+      <!-- 🌱 Plant Hub -->
+      <section class="card" id="plantHub">
+        <h2>🌱 Plant Hub</h2>
+        <input type="text" placeholder="Search for a plant" id="plantSearch" />
+        <button id="addPlantBtn">Add Plant</button>
+        <div id="needsWatering">Plants needing water today...</div>
+        <div class="horizontal-scroll" id="plantCards"></div>
+      </section>
+
+      <!-- 🌤️ Cozy Extras -->
+      <section class="card" id="cozyExtras">
+        <h2>🌤️ Cozy Extras</h2>
+        <div id="weatherWidget">Weather loading...</div>
+        <button id="surpriseMeBtn">Surprise Me 🌟</button>
+        <div id="memoryScrapbook">Memory scrapbook content here...</div>
+      </section>
+    </main>
+
+    <!-- Scripts - Load in correct order -->
+    <script>
+      // Global variables needed by pattern fetcher
+      const trendingPostsContainer = document.getElementById("trendingPosts");
+
+      // Loading spinner CSS if not already in styles.css
+      if (!document.querySelector("style[data-loading-styles]")) {
+        const loadingStyles = document.createElement("style");
+        loadingStyles.setAttribute("data-loading-styles", "true");
+        loadingStyles.textContent = `
+          .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--cream-dark, #f0ede4);
+            border-top: 2px solid var(--brown, #8b4513);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+          }
+          
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `;
+        document.head.appendChild(loadingStyles);
+      }
+    </script>
+
+    <!-- Live Premium Pattern Fetcher - MUST load first -->
+    <script src="pattern-fetcher.js"></script>
+
+    <!-- Main app script -->
+    <script src="app.js"></script>
+
+    <!-- Other modules -->
+    <script src="spotify.js"></script>
+    <script src="youtube.js"></script>
+
+    <!-- Remove old knitting.js - now replaced by live-premium-fetcher.js -->
+  </body>
+</html>
